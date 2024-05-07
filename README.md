@@ -5,6 +5,7 @@ S.D. - SAE 6.VCOD.01 Developpement et test outil decisionnel
 
 Avoir la version python 3.9
 
+Télécharger les packages requis
 ```bash
 pip install -r requirements.txt
 ```
