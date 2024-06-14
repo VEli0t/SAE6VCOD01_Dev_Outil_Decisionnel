@@ -1,0 +1,59 @@
+{% extends "base-filtre.html" %}
+
+{% block title %}
+Page 2
+{% endblock %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>Répartition des opérations dans le monde</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var yearSelect = document.getElementById('year');
+            var categoryCheckboxes = document.querySelectorAll('input[name="categories"]');
+
+            yearSelect.addEventListener('change', function () {
+                document.getElementById('filterForm').submit();
+            });
+
+            categoryCheckboxes.forEach(function (checkbox) {
+                checkbox.addEventListener('change', function () {
+                    document.getElementById('filterForm').submit();
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container" style="display: flex;">
+        <div class="filtre-container" style="width: 35%; height: vmax; padding: 10px; border-right: 1px solid black;">
+            <div class="filtre">
+                <h3>Filtres</h3>
+                <form method="POST" action="{{ url_for('auth.operation') }}" id="filterForm">
+                    <br>
+                    <h4>Année</h4>
+                    <select name="year" id="year">
+                        {% for year in all_years %}
+                            <option value="{{ year }}" {% if selected_year == year %}selected{% endif %}>{{ year }}</option>
+                        {% endfor %}
+                    </select>
+                    <br><br>
+                    <h4>Catégorie</h4>
+                    {% for category in all_categories %}
+                        <div>
+                            <input type="checkbox" id="category_{{ category }}" name="categories" value="{{ category }}"
+                            {% if category in selected_categories %}checked{% endif %}>
+                            <label for="category_{{ category }}">{{ category }}</label>
+                        </div>
+                    {% endfor %}
+                </form>
+            </div>
+        </div>
+        <div class="content" style="flex-grow: 1; padding: 35px;">
+            <h1>Répartition des opérations dans le monde</h1>
+            <iframe src="{{ url_for('static', filename='map.html') }}" width="100%" height="600px"></iframe>
+        </div>
+    </div>
+</body>
+{% endblock %}

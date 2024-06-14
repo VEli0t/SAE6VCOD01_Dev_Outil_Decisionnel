@@ -1,0 +1,119 @@
+{% extends "base-filtre.html" %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>Présentation des données</title>
+    <style>
+        .numeric-cell {
+            background-color: #f0f0f0;
+            color: #808080;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const cells = document.querySelectorAll("[data-type]");
+            cells.forEach(cell => {
+                if (cell.dataset.type === "nan" || cell.dataset.type === "none") {
+                    cell.classList.add("numeric-cell");
+                    cell.innerHTML = ""; // Vidage de la cellule
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div style="display: flex;">
+        <div class="filtre" style="width: 20%; height: vmax; padding: 10px; border-right: 1px solid black;">
+            <form method="GET" action="{{ url_for('auth.presentation_data') }}" id="dataset-form">
+                <label for="dataset">Choisissez un jeu de données</label>
+                <select id="dataset" name="dataset" onchange="document.getElementById('dataset-form').submit();">
+                    <option value="">--Sélectionnez un fichier--</option>
+                    {% for filename in descriptions.keys() %}
+                    <option value="{{ filename }}" {% if filename == selected_dataset %}selected{% endif %}>{{ filename }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+        <div style="flex-grow: 1; padding: 10px;">
+            <h2>Jeux de données disponibles</h2>
+            <p>Cette section fournit une description des différents jeux de données présents dans le répertoire <code>Data</code>.</p>
+
+            {% if selected_dataset %}
+                <h3>{{ selected_dataset }}</h3>
+                <p>Ce fichier contient les statistiques suivantes :</p>
+                <table border="1" style="border-collapse: collapse; width: 100%; margin-top: 10px;">
+                    <thead>
+                        <tr>
+                            <th>Colonne</th>
+                            <th>Nombre de valeurs</th>
+                            <th>Moyenne</th>
+                            <th>Écart-type</th>
+                            <th>Min</th>
+                            <th>25%</th>
+                            <th>50%</th>
+                            <th>75%</th>
+                            <th>Max</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for column, stats in descriptions[selected_dataset].items() %}
+                        <tr>
+                            <td>{{ column }}</td>
+                            <td data-type="{{ 'nan' if stats['count'] is none or stats['count'] == 'nan' else '' }}">{{ stats['count'] if 'count' in stats and stats['count'] is not none and stats['count'] != 'nan' else '' }}</td>
+                            <td data-type="{{ 'nan' if stats['mean'] is none or stats['mean'] == 'nan' else '' }}">{{ stats['mean'] if 'mean' in stats and stats['mean'] is not none and stats['mean'] != 'nan' else '' }}</td>
+                            <td data-type="{{ 'nan' if stats['std'] is none or stats['std'] == 'nan' else '' }}">{{ stats['std'] if 'std' in stats and stats['std'] is not none and stats['std'] != 'nan' else '' }}</td>
+                            <td data-type="{{ 'nan' if stats['min'] is none or stats['min'] == 'nan' else '' }}">{{ stats['min'] if 'min' in stats and stats['min'] is not none and stats['min'] != 'nan' else '' }}</td>
+                            <td data-type="{{ 'nan' if stats['25%'] is none or stats['25%'] == 'nan' else '' }}">{{ stats['25%'] if '25%' in stats and stats['25%'] is not none and stats['25%'] != 'nan' else '' }}</td>
+                            <td data-type="{{ 'nan' if stats['50%'] is none or stats['50%'] == 'nan' else '' }}">{{ stats['50%'] if '50%' in stats and stats['50%'] is not none and stats['50%'] != 'nan' else '' }}</td>
+                            <td data-type="{{ 'nan' if stats['75%'] is none or stats['75%'] == 'nan' else '' }}">{{ stats['75%'] if '75%' in stats and stats['75%'] is not none and stats['75%'] != 'nan' else '' }}</td>
+                            <td data-type="{{ 'nan' if stats['max'] is none or stats['max'] == 'nan' else '' }}">{{ stats['max'] if 'max' in stats and stats['max'] is not none and stats['max'] != 'nan' else '' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                {% for filename, description in descriptions.items() %}
+                <h3>{{ filename }}</h3>
+                <p>Ce fichier contient les statistiques suivantes :</p>
+                <table border="1" style="border-collapse: collapse; width: 100%; margin-top: 10px;">
+                    <thead>
+                        <tr>
+                            <th>Colonne</th>
+                            <th>Nombre de valeurs</th>
+                            <th>Moyenne</th>
+                            <th>Écart-type</th>
+                            <th>Min</th>
+                            <th>25%</th>
+                            <th>50%</th>
+                            <th>75%</th>
+                            <th>Max</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for column, stats in description.items() %}
+                        <tr>
+                            <td>{{ column }}</td>
+                            <td data-type="{{ 'nan' if stats['count'] is none or stats['count'] == 'nan' else '' }}">{{ stats['count'] if 'count' in stats and stats['count'] is not none and stats['count'] != 'nan' else '' }}</td>
+                            <td data-type="{{ 'nan' if stats['mean'] is none or stats['mean'] == 'nan' else '' }}">{{ stats['mean'] if 'mean' in stats and stats['mean'] is not none and stats['mean'] != 'nan' else '' }}</td>
+                            <td data-type="{{ 'nan' if stats['std'] is none or stats['std'] == 'nan' else '' }}">{{ stats['std'] if 'std' in stats and stats['std'] is not none and stats['std'] != 'nan' else '' }}</td>
+                            <td data-type="{{ 'nan' if stats['min'] is none or stats['min'] == 'nan' else '' }}">{{ stats['min'] if 'min' in stats and stats['min'] is not none and stats['min'] != 'nan' else '' }}</td>
+                            <td data-type="{{ 'nan' if stats['25%'] is none or stats['25%'] == 'nan' else '' }}">{{ stats['25%'] if '25%' in stats and stats['25%'] is not none and stats['25%'] != 'nan' else '' }}</td>
+                            <td data-type="{{ 'nan' if stats['50%'] is none or stats['50%'] == 'nan' else '' }}">{{ stats['50%'] if '50%' in stats and stats['50%'] is not none and stats['50%'] != 'nan' else '' }}</td>
+                            <td data-type="{{ 'nan' if stats['75%'] is none or stats['75%'] == 'nan' else '' }}">{{ stats['75%'] if '75%' in stats and stats['75%'] is not none and stats['75%'] != 'nan' else '' }}</td>
+                            <td data-type="{{ 'nan' if stats['max'] is none or stats['max'] == 'nan' else '' }}">{{ stats['max'] if 'max' in stats and stats['max'] is not none and stats['max'] != 'nan' else '' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <br><br>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</body>
+{% endblock %}

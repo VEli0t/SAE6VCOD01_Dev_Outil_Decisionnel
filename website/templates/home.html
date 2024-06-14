@@ -1,21 +1,38 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+{% extends "base.html" %} {% block title %}Accueil{% endblock %} {% block content
 %}
-<h1 align="center">Notes</h1>
-<ul class="list-group list-group-flush" id="notes">
-  {% for note in user.notes %}
-  <li class="list-group-item">
-    {{ note.data }}
-    <button type="button" class="close" onClick="deleteNote({{ note.id }})">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </li>
-  {% endfor %}
+<br>
+<h2>Bienvenue sur la Plateforme d’Étude des Données SECMAR</h2>
+
+<p>Bienvenue sur notre plateforme dédiée à l’étude et à l’analyse des données issues du projet SECMAR (Système d’Échange et de Coordination Maritime).</p>
+<p>Ce site a pour but de fournir des outils et des ressources pour explorer, analyser et visualiser les données maritimes afin d’améliorer la sécurité en mer et la protection de l’environnement marin.</p>
+
+<h3>Qu’est-ce que SECMAR ?</h3>
+
+<p>SECMAR est un projet du Ministère de la Transition Écologique et Solidaire, visant à offrir une solution intégrée pour le suivi et la gestion des activités maritimes. </p>
+<p>Le système combine des technologies de pointe pour surveiller, coordonner et gérer les opérations maritimes, contribuant ainsi à renforcer la sécurité maritime et à protéger l’environnement marin.</p>
+
+<h3>Objectifs de la Plateforme</h3>
+
+<p>Cette plateforme est conçue pour faciliter l’accès et l’analyse des données maritimes collectées par SECMAR. </p>
+<p>Nos principaux objectifs sont :</p>
+<ul>
+    <li>Exploration des Données : Fournir des outils interactifs pour explorer les différentes bases de données maritimes disponibles.</li>
+    <li>Analyse des Tendances : Permettre l’analyse des tendances en matière de sécurité maritime, de trafic maritime et de protection de l’environnement.</li>
+    <li>Visualisation des Données : Offrir des visualisations intuitives et informatives pour mieux comprendre les données et faciliter la prise de décisions.</li>
+    <li>Partage des Connaissances : Faciliter le partage des analyses et des insights entre les différentes parties prenantes impliquées dans les activités maritimes.</li>
 </ul>
-<form method="POST">
-  <textarea name="note" id="note" class="form-control"></textarea>
-  <br />
-  <div align="center">
-    <button type="submit" class="btn btn-primary">Add Note</button>
-  </div>
-</form>
+<h3>Fonctionnalités Principales</h3>
+
+Exploration Interactive des Données
+
+<p>Utilisez nos outils d’exploration pour naviguer à travers les bases de données maritimes, filtrer les informations selon différents critères et accéder à des données détaillées sur les opérations maritimes, les incidents et les tendances.</p>
+
+Visualisation Dynamique
+
+<p>Nos tableaux de bord et graphiques interactifs vous permettent de visualiser les données maritimes de manière claire et intuitive. </p>
+
+<h3>Ressources et Documentation</h3>
+<p>Sources des données : <a href="https://statandmore.com/univ/CROSS-SECMAR.zip">https://statandmore.com/univ/CROSS-SECMAR.zip</a></p>
+<p>Documentation des données : <a href="https://mtes-mct.github.io/secmar-documentation/">https://mtes-mct.github.io/secmar-documentation/</a></p>
+
 {% endblock %}

@@ -1,0 +1,111 @@
+{% extends "base-filtre.html" %}
+
+{% block title %}
+Analyse
+{% endblock %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>Analyse</title>
+    <style>
+        .kpi-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .kpi {
+            background: #f4f4f4;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 20%;
+        }
+        .kpi h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .kpi p {
+            margin: 5px 0 0;
+            font-size: 18px;
+        }
+        .graphs-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .graph {
+            width: 48%;
+        }
+        .filtre-container {
+            width: 20%;
+            height: 100vh;
+            padding: 10px;
+            border-right: 1px solid black;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 50px;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var yearSelect = document.getElementById('year');
+            var categoryCheckboxes = document.querySelectorAll('input[name="categories"]');
+
+            yearSelect.addEventListener('change', function () {
+                document.getElementById('filterForm').submit();
+            });
+
+            categoryCheckboxes.forEach(function (checkbox) {
+                checkbox.addEventListener('change', function () {
+                    document.getElementById('filterForm').submit();
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container" style="display: flex;">
+        <div class="filtre-container">
+            <div class="filtre">
+                <h3>Filtre</h3>
+                <form method="POST" action="{{ url_for('auth.analyse') }}" id="filterForm">
+                    <label for="year">Année:</label>
+                    <select name="year" id="year">
+                        <option value="all" {% if selected_year == 'all' %}selected{% endif %}>Toutes les années</option>
+                        {% for year in all_years %}
+                            <option value="{{ year }}" {% if selected_year == year %}selected{% endif %}>{{ year }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+        </div>
+        <div class="content">
+            <h1>Analyse humaine des opérations</h1>
+            <div class="kpi-container">
+                <div class="kpi">
+                    <h2>{{ kpi_operations }}</h2>
+                    <p>Nombre d'opérations</p>
+                </div>
+                <div class="kpi">
+                    <h2>{{ kpi_deces }}</h2>
+                    <p>Décès ou disparition</p>
+                </div>
+                <div class="kpi">
+                    <h2>{{ kpi_assistance }}</h2>
+                    <p>Impliquées</p>
+                </div>
+                <div class="kpi">
+                    <h2>{{ kpi_blesses }}</h2>
+                    <p>Blessés</p>
+                </div>
+            </div>
+            <div class="graphs-container">
+                <img class="graph" src="{{ plot_path }}" alt="Nombre d'opérations par mois">
+                <img class="graph" src="{{ plot_path2 }}" alt="Nombre de personnes blessées, décédées et assistées">
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}

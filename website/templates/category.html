@@ -1,0 +1,84 @@
+{% extends "base-filtre.html" %}
+
+{% block title %}
+Catégories d'Événements
+{% endblock %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>Catégories d'Événements</title>
+    <style>
+        .graphs-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .graph {
+            width: 48%;
+        }
+        .filtre-container {
+            width: 20%;
+            height: 100vh;
+            padding: 10px;
+            border-right: 1px solid black;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 50px;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var yearSelect = document.getElementById('year');
+            var categoryCheckboxes = document.querySelectorAll('input[name="categories"]');
+
+            yearSelect.addEventListener('change', function () {
+                document.getElementById('filterForm').submit();
+            });
+
+            categoryCheckboxes.forEach(function (checkbox) {
+                checkbox.addEventListener('change', function () {
+                    document.getElementById('filterForm').submit();
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container" style="display: flex;">
+        <div class="filtre-container">
+            <div class="filtre">
+                <h3>Filtres</h3>
+                <form method="POST" action="{{ url_for('auth.category') }}" id="filterForm">
+                    <label for="year">Année:</label>
+                    <select name="year" id="year">
+                        <option value="all" {% if selected_year == 'all' %}selected{% endif %}>Toutes les années</option>
+                        {% for year in all_years %}
+                            <option value="{{ year }}" {% if selected_year == year %}selected{% endif %}>{{ year }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+        </div>
+        <div class="content">
+            <h1>Nombre d'Opérations par Catégorie d'Événement</h1>
+            <br>
+            <div class="graphs-container">
+                <img class="graph" src="{{ plot_path }}" alt="Nombre d'opérations par catégorie d'événement">
+                <img class="graph" src="{{ plot_path2 }}" alt="Répartition des types d'opérations">
+            </div>
+            <div style="float: right; width: 70vh;">
+                <br><p>Les types d'opérations coordonnés par le CROSS : </p>
+                <ul>
+                    <li>SAR (search and rescue) : vie humaine en danger</li>
+                    <li>PAS (maritime assistance service) : assistance aux navires</li>
+                    <li>SUR : sûreté des navires</li>
+                    <li>POL : pollutions</li>
+                    <li>DIV : autres cas</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}
